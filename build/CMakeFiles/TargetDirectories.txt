@@ -1,0 +1,3 @@
+/home/ibrahimvis/Documents/udacity/projects/Snake-Game/build/CMakeFiles/rebuild_cache.dir
+/home/ibrahimvis/Documents/udacity/projects/Snake-Game/build/CMakeFiles/edit_cache.dir
+/home/ibrahimvis/Documents/udacity/projects/Snake-Game/build/CMakeFiles/SnakeGame.dir

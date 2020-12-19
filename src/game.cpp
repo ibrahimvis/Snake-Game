@@ -1,12 +1,12 @@
 #include "game.h"
-#include <iostream>
 #include "SDL.h"
+#include <iostream>
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
-      engine(dev()),
-      random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)) {
+Game::Game(std::size_t grid_width, std::size_t grid_height,
+           std::size_t screen_height, std::size_t screen_width)
+    : snake(grid_width, grid_height), engine(dev()),
+      random_w(0, static_cast<int>(screen_width / grid_width)),
+      random_h(0, static_cast<int>(screen_height / grid_height)) {
   PlaceFood();
 }
 
@@ -66,7 +66,8 @@ void Game::PlaceFood() {
 }
 
 void Game::Update() {
-  if (!snake.alive) return;
+  if (!snake.alive)
+    return;
 
   snake.Update();
 
@@ -79,7 +80,8 @@ void Game::Update() {
     PlaceFood();
     // Grow snake and increase speed.
     snake.GrowBody();
-    snake.speed += 0.02;
+
+    // snake.speed += 0.02;
   }
 }
 
