@@ -12,20 +12,34 @@ Game::Game(std::size_t grid_width, std::size_t grid_height,
 
 void Game::Run(Controller const &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
+
+  // SDL_Surface *menus;
+
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
   Uint32 frame_duration;
   int frame_count = 0;
+  int selected = 0;
+  bool gameplayRunning = false;
   bool running = true;
 
   while (running) {
     frame_start = SDL_GetTicks();
 
-    // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
-    Update();
-    renderer.Render(snake, food);
+    // Input, Update, Render 
+    // this part is for the gameplay.
+    if (gameplayRunning) {
+      controller.HandleInput(running, gameplayRunning, snake);
+      Update();
+      renderer.Render(snake, food);
+    }
+
+    // this part for the menu
+    else {
+      controller.HandleMenuInput(selected, running, gameplayRunning);
+      renderer.renderMenu(selected);
+    }
 
     frame_end = SDL_GetTicks();
 

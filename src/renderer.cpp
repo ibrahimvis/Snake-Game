@@ -5,10 +5,8 @@
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
                    const std::size_t grid_width, const std::size_t grid_height)
-    : screen_width(screen_width),
-      screen_height(screen_height),
-      grid_width(grid_width),
-      grid_height(grid_height) {
+    : screen_width(screen_width), screen_height(screen_height),
+      grid_width(grid_width), grid_height(grid_height) {
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL could not initialize.\n";
@@ -31,6 +29,8 @@ Renderer::Renderer(const std::size_t screen_width,
     std::cerr << "Renderer could not be created.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
   }
+
+  TTF_Init();
 }
 
 Renderer::~Renderer() {
@@ -75,7 +75,51 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   SDL_RenderPresent(sdl_renderer);
 }
 
+void Renderer::renderMenu(int selected) {
+  SDL_Rect block;
+  block.w = screen_width / grid_width;
+  block.h = screen_height / grid_height;
+
+  // Clear screen
+  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
+  SDL_RenderClear(sdl_renderer);
+
+  TTF_Font *font = TTF_OpenFont("../FreeMono.ttf", 32);
+  SDL_Color color, color2;
+  if (selected == 0)
+    color = {0xff, 0x00, 0x00};
+  else 
+    color = {0xff, 0xff, 0xff};
+  SDL_Surface *textSurface;
+  textSurface = TTF_RenderText_Solid(font, "Play", color);
+
+  SDL_Texture *text_texture;
+  text_texture = SDL_CreateTextureFromSurface(sdl_renderer, textSurface);
+
+  SDL_Rect dest;
+  dest = {290, 280, textSurface->w, textSurface->h};
+
+  SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+
+  if (selected == 1)
+    color2 = {0xff, 0x00, 0x00};
+  else 
+    color2 = {0xff, 0xff, 0xff};
+
+  textSurface = TTF_RenderText_Solid(font, "Exit", color2);
+
+  text_texture = SDL_CreateTextureFromSurface(sdl_renderer, textSurface);
+
+  dest = {290, 320, textSurface->w, textSurface->h};
+
+  SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+
+  // Update Screen
+  SDL_RenderPresent(sdl_renderer);
+}
+
 void Renderer::UpdateWindowTitle(int score, int fps) {
-  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+  std::string title{"Snake Score: " + std::to_string(score) +
+                    " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }

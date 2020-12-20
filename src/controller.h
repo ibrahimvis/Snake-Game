@@ -4,10 +4,11 @@
 #include "snake.h"
 
 class Controller {
- public:
-  void HandleInput(bool &running, Snake &snake) const;
+public:
+  void HandleInput(bool &running, bool &gameplayRunning, Snake &snake) const;
+  void HandleMenuInput(int &selected, bool &running, bool &gameplayRunning) const;
 
- private:
+private:
   void ChangeDirection(Snake &snake, Snake::Direction input,
                        Snake::Direction opposite) const;
 };
