@@ -7,17 +7,24 @@
 #include "vector"
 
 class Menu {
-  enum class Color { kWhite, kRed };
-
-private:
-  std::vector<SDL_Surface> menus;
-  SDL_Color color = {0, 0, 0}, bgcolor = {0xff, 0xff, 0xff};
-  TTF_Font *font;
-  int selected;
 
 public:
-  Menu(std::size_t screen_width, std::size_t screen_height);
+  Menu();
   ~Menu();
+  enum class TextState { playS, exitS, playU, exitU };
+
+  SDL_Surface *getText(TextState state);
+
+  int getW() const { return textW; }
+  int getH() const { return textH; }
+
+private:
+  int getIndex(TextState i);
+  TTF_Font *font;
+  std::vector<SDL_Surface*> textSurface;
+  std::vector<SDL_Color> color;
+  int textW, textH;
+  const int numOfMenu = 2;
 };
 
 #endif

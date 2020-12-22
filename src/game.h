@@ -5,6 +5,7 @@
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include "menu.h"
 #include <random>
 
 class Game {
@@ -29,7 +30,7 @@ private:
   int score{0};
 
   void PlaceFood();
-  void Update();
+  void Update(bool &running);
 };
 
 #endif

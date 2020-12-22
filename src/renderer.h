@@ -5,6 +5,7 @@
 #include "SDL.h"
 #include "SDL2/SDL_ttf.h"
 #include "snake.h"
+#include "menu.h"
 
 class Renderer {
  public:
@@ -13,7 +14,7 @@ class Renderer {
   ~Renderer();
 
   void Render(Snake const snake, SDL_Point const &food);
-  void renderMenu(int selected);
+  void renderMenu(int selected, Menu &menu);
   void UpdateWindowTitle(int score, int fps);
 
  private:

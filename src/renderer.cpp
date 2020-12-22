@@ -30,7 +30,7 @@ Renderer::Renderer(const std::size_t screen_width,
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
   }
 
-  TTF_Init();
+  
 }
 
 Renderer::~Renderer() {
@@ -75,7 +75,7 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::renderMenu(int selected) {
+void Renderer::renderMenu(int selected, Menu &menu) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -84,35 +84,41 @@ void Renderer::renderMenu(int selected) {
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
 
-  TTF_Font *font = TTF_OpenFont("../FreeMono.ttf", 32);
-  SDL_Color color, color2;
-  if (selected == 0)
-    color = {0xff, 0x00, 0x00};
-  else 
-    color = {0xff, 0xff, 0xff};
-  SDL_Surface *textSurface;
-  textSurface = TTF_RenderText_Solid(font, "Play", color);
+  if (selected == 0) {
+    // color = {0xff, 0x00, 0x00};
+    SDL_Texture *text_texture;
+    text_texture = SDL_CreateTextureFromSurface(
+        sdl_renderer, menu.getText(Menu::TextState::playS));
 
-  SDL_Texture *text_texture;
-  text_texture = SDL_CreateTextureFromSurface(sdl_renderer, textSurface);
+    SDL_Rect dest;
+    dest = {290, 280, menu.getW(), menu.getH()};
 
-  SDL_Rect dest;
-  dest = {290, 280, textSurface->w, textSurface->h};
+    SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
 
-  SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+    text_texture = SDL_CreateTextureFromSurface(
+        sdl_renderer, menu.getText(Menu::TextState::exitU));
 
-  if (selected == 1)
-    color2 = {0xff, 0x00, 0x00};
-  else 
-    color2 = {0xff, 0xff, 0xff};
+    dest = {290, 320, menu.getW(), menu.getH()};
 
-  textSurface = TTF_RenderText_Solid(font, "Exit", color2);
+    SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+  } else {
+    // color = {0xff, 0x00, 0x00};
+    SDL_Texture *text_texture;
+    text_texture = SDL_CreateTextureFromSurface(
+        sdl_renderer, menu.getText(Menu::TextState::playU));
 
-  text_texture = SDL_CreateTextureFromSurface(sdl_renderer, textSurface);
+    SDL_Rect dest;
+    dest = {290, 280, menu.getW(), menu.getH()};
 
-  dest = {290, 320, textSurface->w, textSurface->h};
+    SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
 
-  SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+    text_texture = SDL_CreateTextureFromSurface(
+        sdl_renderer, menu.getText(Menu::TextState::exitS));
+
+    dest = {290, 320, menu.getW(), menu.getH()};
+
+    SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+  }
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);
