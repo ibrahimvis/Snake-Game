@@ -3,6 +3,13 @@
 #include "snake.h"
 #include <iostream>
 
+////////////////////////////////////////////////////////////////////////////////////
+// This for handling input in the menu 
+// mainly we have three values we edit depnding on the user input
+// gameplayRunning this one will start the game
+// running is for quiting and closing the game
+// selected is used for changing the color of the text in the menu 
+////////////////////////////////////////////////////////////////////////////////////
 void Controller::HandleMenuInput(int &selected, bool &running,
                                  bool &gameplayRunning) const {
   SDL_Event e;
@@ -66,8 +73,10 @@ void Controller::HandleInput(bool &running,
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////////////////
   // this block of code is used so we can now if the user is holding
   // the key .. if so we increase the movment speed of the snake
+  ////////////////////////////////////////////////////////////////////////////////////
   const Uint8 *state = SDL_GetKeyboardState(NULL);
   if (state[SDL_SCANCODE_UP] && snake.direction == Snake::Direction::kUp) {
     snake.speed = 0.3f;

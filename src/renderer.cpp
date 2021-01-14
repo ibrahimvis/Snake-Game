@@ -29,8 +29,6 @@ Renderer::Renderer(const std::size_t screen_width,
     std::cerr << "Renderer could not be created.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
   }
-
-  
 }
 
 Renderer::~Renderer() {
@@ -75,14 +73,37 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::renderMenu(int selected, Menu &menu) {
-  SDL_Rect block;
-  block.w = screen_width / grid_width;
-  block.h = screen_height / grid_height;
-
+////////////////////////////////////////////////////////////////////////////////////
+// this is code works very similar to the to the render function
+// here we use the menu reference to get the text to render
+// and at what position to render it to
+// also we check for the selected variable so we can change the color of 
+// the highlighted text
+////////////////////////////////////////////////////////////////////////////////////
+void Renderer::renderMenu(int selected, Menu &menu, std::vector<int> scores) {
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
+
+  if (scores.size() > 0) {
+
+    SDL_Surface *temp = menu.getText(Menu::TextState::topScores);
+
+    SDL_Texture *text_texture;
+    text_texture = SDL_CreateTextureFromSurface(
+        sdl_renderer, temp);
+
+    SDL_Rect dest;
+    dest = {190, 290, temp->w, temp->h};
+
+    SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+
+    try {
+      renderScore(menu, scores);
+    } catch (...) {
+      
+    }
+  }
 
   if (selected == 0) {
     // color = {0xff, 0x00, 0x00};
@@ -91,14 +112,14 @@ void Renderer::renderMenu(int selected, Menu &menu) {
         sdl_renderer, menu.getText(Menu::TextState::playS));
 
     SDL_Rect dest;
-    dest = {290, 280, menu.getW(), menu.getH()};
+    dest = {290, 180, menu.getW(), menu.getH()};
 
     SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
 
     text_texture = SDL_CreateTextureFromSurface(
         sdl_renderer, menu.getText(Menu::TextState::exitU));
 
-    dest = {290, 320, menu.getW(), menu.getH()};
+    dest = {290, 220, menu.getW(), menu.getH()};
 
     SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
   } else {
@@ -108,20 +129,38 @@ void Renderer::renderMenu(int selected, Menu &menu) {
         sdl_renderer, menu.getText(Menu::TextState::playU));
 
     SDL_Rect dest;
-    dest = {290, 280, menu.getW(), menu.getH()};
+    dest = {290, 180, menu.getW(), menu.getH()};
 
     SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
 
     text_texture = SDL_CreateTextureFromSurface(
         sdl_renderer, menu.getText(Menu::TextState::exitS));
 
-    dest = {290, 320, menu.getW(), menu.getH()};
+    dest = {290, 220, menu.getW(), menu.getH()};
 
     SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
   }
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);
+}
+
+void Renderer::renderScore(Menu &menu, std::vector<int> scores) {
+
+  int inc = 360;
+  std::vector<SDL_Surface*> textScores = menu.getTextScores();
+
+  for (int i = 0; i < textScores.size(); i++) {
+    
+    SDL_Texture *text_texture;
+    text_texture = SDL_CreateTextureFromSurface(sdl_renderer, textScores[i]);
+
+    SDL_Rect dest;
+    dest = {250, inc, textScores[i]->w, textScores[i]->h};
+
+    SDL_RenderCopy(sdl_renderer, text_texture, NULL, &dest);
+    inc += 25;
+  }
 }
 
 void Renderer::UpdateWindowTitle(int score, int fps) {

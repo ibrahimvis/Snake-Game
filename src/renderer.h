@@ -14,7 +14,8 @@ class Renderer {
   ~Renderer();
 
   void Render(Snake const snake, SDL_Point const &food);
-  void renderMenu(int selected, Menu &menu);
+  void renderMenu(int selected, Menu &menu, std::vector<int> scores);
+  void renderScore(Menu &menu, std::vector<int> scores);
   void UpdateWindowTitle(int score, int fps);
 
  private:
