@@ -6,6 +6,7 @@
 #include "renderer.h"
 #include "snake.h"
 #include "menu.h"
+
 #include <random>
 
 class Game {
@@ -22,6 +23,9 @@ private:
   Snake snake;
   SDL_Point food;
 
+  int numOfItems;
+  std::vector<SDL_Point> items;
+
   std::random_device dev;
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
@@ -29,7 +33,7 @@ private:
 
   int score{0};
 
-  void PlaceFood();
+  void placeFoodAndItems();
   void Update(bool &running);
 };
 

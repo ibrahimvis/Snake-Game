@@ -13,7 +13,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(Snake const snake, SDL_Point const &food);
+  void Render(Snake const snake, SDL_Point const &food, std::vector<SDL_Point> &items);
   void renderMenu(int selected, Menu &menu, std::vector<int> scores);
   void renderScore(Menu &menu, std::vector<int> scores);
   void UpdateWindowTitle(int score, int fps);

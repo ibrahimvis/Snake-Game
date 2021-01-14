@@ -36,7 +36,8 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+void Renderer::Render(Snake const snake, SDL_Point const &food,
+                      std::vector<SDL_Point> &items) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -50,6 +51,14 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   block.x = food.x * block.w;
   block.y = food.y * block.h;
   SDL_RenderFillRect(sdl_renderer, &block);
+
+  // Render items
+  SDL_SetRenderDrawColor(sdl_renderer, 0xff, 0x00, 0x00, 0xFF);
+  for (auto i : items) {
+    block.x = i.x * block.w;
+    block.y = i.y * block.h;
+    SDL_RenderFillRect(sdl_renderer, &block);
+  }
 
   // Render snake's body
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -77,7 +86,7 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
 // this is code works very similar to the to the render function
 // here we use the menu reference to get the text to render
 // and at what position to render it to
-// also we check for the selected variable so we can change the color of 
+// also we check for the selected variable so we can change the color of
 // the highlighted text
 ////////////////////////////////////////////////////////////////////////////////////
 void Renderer::renderMenu(int selected, Menu &menu, std::vector<int> scores) {
@@ -90,8 +99,7 @@ void Renderer::renderMenu(int selected, Menu &menu, std::vector<int> scores) {
     SDL_Surface *temp = menu.getText(Menu::TextState::topScores);
 
     SDL_Texture *text_texture;
-    text_texture = SDL_CreateTextureFromSurface(
-        sdl_renderer, temp);
+    text_texture = SDL_CreateTextureFromSurface(sdl_renderer, temp);
 
     SDL_Rect dest;
     dest = {190, 290, temp->w, temp->h};
@@ -101,7 +109,6 @@ void Renderer::renderMenu(int selected, Menu &menu, std::vector<int> scores) {
     try {
       renderScore(menu, scores);
     } catch (...) {
-      
     }
   }
 
@@ -148,10 +155,10 @@ void Renderer::renderMenu(int selected, Menu &menu, std::vector<int> scores) {
 void Renderer::renderScore(Menu &menu, std::vector<int> scores) {
 
   int inc = 360;
-  std::vector<SDL_Surface*> textScores = menu.getTextScores();
+  std::vector<SDL_Surface *> textScores = menu.getTextScores();
 
   for (int i = 0; i < textScores.size(); i++) {
-    
+
     SDL_Texture *text_texture;
     text_texture = SDL_CreateTextureFromSurface(sdl_renderer, textScores[i]);
 
